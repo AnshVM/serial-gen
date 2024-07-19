@@ -1,7 +1,8 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
+import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Db from './db'
+import { writeFile } from 'fs/promises'
 
 function createWindow(): void {
   // Create the browser window.
@@ -75,6 +76,17 @@ app.whenReady().then(() => {
   ipcMain.handle('filter-serial-numbers', async (_: any, filters: any) => {
     //@ts-ignore
     return await db.filterSerialNumbers(filters);
+  })
+
+  ipcMain.handle('save-file', async (_:any, csv: string, startDate: string, endDate: string, modelName: string) => {
+    const result = await dialog.showOpenDialog({
+      properties: ['openDirectory']
+    })
+    if(result.canceled) {
+      return null;
+    }
+    const filePath = path.join(result.filePaths[0],`serialgen-${startDate}-${endDate}-${modelName}.csv`);
+    await writeFile(filePath, csv);
   })
 
   createWindow()

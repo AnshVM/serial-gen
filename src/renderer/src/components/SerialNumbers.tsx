@@ -1,4 +1,5 @@
-import { Button, Input, Select, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { ArrowDownIcon } from "@chakra-ui/icons";
+import { Box, Button, IconButton, Input, Select, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { Model, SerialNumber } from "@renderer/types";
 import { useEffect, useState } from "react"
 
@@ -17,11 +18,37 @@ export default function SerialNumbers() {
     const applyFilters = () => {
         window.api.filterSerialNumbers({
             modelName: modelName !== '' ? modelName : undefined,
-            startDate, 
+            startDate,
             endDate
         })
             .then((res) => setSerials(res))
             .catch((err) => console.log(err));
+    }
+
+    const handleDownload = async () => {
+        await window.api.saveFile(
+            generateCsv(),
+            startDate.toISOString().split('T')[0],
+            endDate.toISOString().split('T')[0],
+            modelName
+        )
+    }
+
+    const generateCsv = () => {
+        let rows = [['Serial', 'Date', 'Company', 'Model', 'Sequence'].join(',')];
+        if(serials) {
+            for(const s of serials) {
+                const row = [
+                    s.serial,
+                    s.createdAt.toISOString().split('T')[0],
+                    s.company,
+                    `${s.modelName}-${getModel(s)?.productName}`,
+                    s.sequence.toString().padStart(4,'0')
+                ];
+                rows.push(row.join(','));
+            }
+        }
+        return rows.join('\n')
     }
 
     useEffect(() => {
@@ -50,7 +77,7 @@ export default function SerialNumbers() {
                     onChange={e => setModelName(e.target.value)}
                 >
                     {models && models.map(model => (
-                        <option value={model.name}>{model.name}-{model.productName}</option>
+                        <option key={model.name} value={model.name}>{model.name}-{model.productName}</option>
                     ))}
                 </Select>
                 <Input
@@ -84,7 +111,7 @@ export default function SerialNumbers() {
                     </Thead>
                     <Tbody>
                         {serials && serials.map(serial => (
-                            <Tr>
+                            <Tr key={serial.serial}>
                                 <Td>{serial.serial}</Td>
                                 <Td>{serial.createdAt.toDateString()}</Td>
                                 <Td>{serial.company}</Td>
@@ -95,7 +122,14 @@ export default function SerialNumbers() {
                     </Tbody>
                 </Table>
             </TableContainer>
-
+            <Box position="fixed" bottom={4} right={4} zIndex={2}>
+                <IconButton
+                    onClick={handleDownload}
+                    aria-label="Download button"
+                    colorScheme="blue"
+                    icon={<ArrowDownIcon />}
+                />
+            </Box>
         </div>
     )
 }

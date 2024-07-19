@@ -18,6 +18,9 @@ const api = {
   },
   filterSerialNumbers: (filters: { modelName?: string, startDate?: Date, endDate?: Date }) => {
     return ipcRenderer.invoke('filter-serial-numbers', filters);
+  },
+  saveFile: (csv: string, startDate: string, endDate: string, modelName: string) => {
+    return ipcRenderer.invoke('save-file', csv, startDate, endDate, modelName);
   }
 }
 

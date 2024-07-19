@@ -20,6 +20,7 @@ export interface API {
   getModelByModelName: (name: string) => Promise<Model>,
   createSerialNumber: (modelName: string, company: string) => Promise<string | null>,
   filterSerialNumbers: (filters: {modelName?: string, startDate?: Date, endDate?: Date}) => Promise<SerialNumber[]>,
+  saveFile: (csv: string, startDate: string, endDate: string, modelName: string) => Promise<string | null>
 }
 
 declare global {
