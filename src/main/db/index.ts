@@ -83,11 +83,11 @@ export default class Db {
 
             await this.db.insert(serialNumbers).values(serial);
 
-            return true;
+            return serialString;
 
         } catch (error) {
             console.log(error);
-            return false;
+            return null;
         }
     }
 

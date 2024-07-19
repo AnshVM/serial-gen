@@ -18,7 +18,7 @@ export interface API {
   createModel: (name: string, code: string, productName: string) => Promise<boolean>,
   getModels: () => Promise<Model[]>,
   getModelByModelName: (name: string) => Promise<Model>,
-  createSerialNumber: (modelName: string, company: string) => Promise<boolean>,
+  createSerialNumber: (modelName: string, company: string) => Promise<string | null>,
   filterSerialNumbers: (filters: {modelName?: string, startDate?: Date, endDate?: Date}) => Promise<SerialNumber[]>,
 }
 

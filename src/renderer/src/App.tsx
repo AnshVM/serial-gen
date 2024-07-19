@@ -1,9 +1,15 @@
+import { useState } from "react"
 import CreateModel from "./components/CreateModel"
+import CreateSerialNumber from "./components/CreateSerialNumber"
 
 function App(): JSX.Element {
+
+  const [updated, setUpdated] = useState(false);
+
   return (
     <>
-     <CreateModel></CreateModel> 
+      <CreateModel updated={updated} setUpdated={setUpdated}/>
+      <CreateSerialNumber updated={updated} setUpdated={setUpdated}/>
     </>
   )
 }

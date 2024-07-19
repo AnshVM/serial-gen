@@ -1,40 +1,40 @@
-import { Button, Input, Select } from "@chakra-ui/react"
-import { profileEnd } from "console";
-import { useEffect, useState } from "react";
+import { Button, Input, useToast } from "@chakra-ui/react"
+import { useState } from "react";
 
-type Model = {
-    name: string;
-    code: string;
-    productName: string;
+type PropType = {
+    updated: boolean,
+    setUpdated: (v: boolean) => void
 }
-
-type SerialNumber = {
-    serial: string;
-    company: string;
-    sequence: number;
-    createdAt: Date;
-    modelName: string;
-}
-
-export default function CreateModel() {
+export default function CreateModel(props: PropType) {
     // name code productName
 
     const [name, setName] = useState('');
     const [code, setCode] = useState('');
     const [productName, setProductName] = useState('');
-    const [error,setError] = useState('');
-    const [message, setMessage] = useState('');
+    const toast = useToast();
+
 
     const handleSaveModel = async () => {
         console.log(name, code, productName)
         const ok = await window.api.createModel(name, code, productName);
         console.log(ok)
         if(!ok) {
-            setError('There was an error while creating the model');
-            setMessage('');
+            toast({
+                title: "Save failed",
+                description: "There was an error while saving the model",
+                status: "error",
+                duration: 9000,
+                isClosable: true
+            })
         } else {
-            setMessage('Model saved successfully')
-            setError('');
+            props.setUpdated(true);
+            toast({
+                title: "Model saved",
+                description: "Model was saved successfully",
+                status: 'success',
+                duration: 9000,
+                isClosable: true
+            })
         }
     }
 
@@ -54,10 +54,6 @@ export default function CreateModel() {
                 >
                 Create Model
             </Button>
-
-            <div className="text-center">
-                {error || message}
-            </div>
         </div>
     )
 }

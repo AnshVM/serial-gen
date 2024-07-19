@@ -11,13 +11,13 @@ const api = {
     return ipcRenderer.invoke('get-models');
   },
   getModelByModelName: (name: string) => {
-    ipcRenderer.invoke('get-model-by-model-name', name);
+    return ipcRenderer.invoke('get-model-by-model-name', name);
   },
   createSerialNumber: (modelName: string, company: string) => {
-    ipcRenderer.invoke('create-serial-number', modelName, company);
+    return ipcRenderer.invoke('create-serial-number', modelName, company);
   },
   filterSerialNumbers: (filters: { modelName?: string, startDate?: Date, endDate?: Date }) => {
-    ipcRenderer.invoke('filter-serial-numbers', filters);
+    return ipcRenderer.invoke('filter-serial-numbers', filters);
   }
 }
 
