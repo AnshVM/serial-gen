@@ -1,11 +1,7 @@
 import { Button, Input, useToast } from "@chakra-ui/react"
 import { useState } from "react";
 
-type PropType = {
-    updated: boolean,
-    setUpdated: (v: boolean) => void
-}
-export default function CreateModel(props: PropType) {
+export default function CreateModel() {
     // name code productName
 
     const [name, setName] = useState('');
@@ -27,7 +23,6 @@ export default function CreateModel(props: PropType) {
                 isClosable: true
             })
         } else {
-            props.setUpdated(true);
             toast({
                 title: "Model saved",
                 description: "Model was saved successfully",

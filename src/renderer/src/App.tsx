@@ -1,15 +1,27 @@
 import { useState } from "react"
 import CreateModel from "./components/CreateModel"
 import CreateSerialNumber from "./components/CreateSerialNumber"
+import { Link } from "@chakra-ui/react";
+
+enum Pages {
+  GEN_SERIAL_NOS,
+  VIEW_SERIAL_NOS,
+  CREATE_MODELS
+}
 
 function App(): JSX.Element {
 
-  const [updated, setUpdated] = useState(false);
+  const [page, setPage] = useState<Pages>();
 
   return (
     <>
-      <CreateModel updated={updated} setUpdated={setUpdated}/>
-      <CreateSerialNumber updated={updated} setUpdated={setUpdated}/>
+      <div className="flex flex-row gap-4 p-1">
+        <Link onClick={() => setPage(Pages.CREATE_MODELS)}>Create Model</Link>
+        <Link onClick={() => setPage(Pages.GEN_SERIAL_NOS)}>Generate Serial Numbers</Link>
+        <Link onClick={() => setPage(Pages.VIEW_SERIAL_NOS)}>View Serial Numbers</Link>
+      </div>
+      {page === Pages.CREATE_MODELS && <CreateModel />}
+      {page === Pages.GEN_SERIAL_NOS && <CreateSerialNumber />}
     </>
   )
 }

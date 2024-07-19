@@ -4,12 +4,7 @@ import { useEffect, useState } from "react";
 
 const COMPANY = 'EBM';
 
-type PropType = {
-    updated: boolean,
-    setUpdated: (v: boolean) => void
-}
-
-export default function CreateSerialNumber(props: PropType) {
+export default function CreateSerialNumber() {
 
     const [models, setModels] = useState<Model[]>();
     const [modelName, setModelName] = useState<string>('');
@@ -48,14 +43,6 @@ export default function CreateSerialNumber(props: PropType) {
     useEffect(() => {
         refreshModels();
     }, [])
-
-    useEffect(() => {
-        if (props.updated === false) {
-            return;
-        }
-        props.setUpdated(false);
-        refreshModels();
-    }, [props.updated])
 
     return (
         <div className="pt-4 flex flex-col gap-4">
