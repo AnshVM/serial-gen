@@ -2,6 +2,7 @@ import { useState } from "react"
 import CreateModel from "./components/CreateModel"
 import CreateSerialNumber from "./components/CreateSerialNumber"
 import { Link } from "@chakra-ui/react";
+import SerialNumbers from "./components/SerialNumbers";
 
 enum Pages {
   GEN_SERIAL_NOS,
@@ -22,6 +23,7 @@ function App(): JSX.Element {
       </div>
       {page === Pages.CREATE_MODELS && <CreateModel />}
       {page === Pages.GEN_SERIAL_NOS && <CreateSerialNumber />}
+      {page === Pages.VIEW_SERIAL_NOS && <SerialNumbers />}
     </>
   )
 }
