@@ -1,6 +1,7 @@
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { Box, Button, IconButton, Input, Select, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { Model, SerialNumber } from "@renderer/types";
+import { stringify } from "querystring";
 import { useEffect, useState } from "react"
 
 export default function SerialNumbers() {
@@ -64,6 +65,13 @@ export default function SerialNumbers() {
             .catch(err => console.log(err));
     }, [])
 
+   const dateToString = (date: Date) => {
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    return date.toISOString().split('T')[0];
+   } 
 
     return (
         <div className="pl-2">
@@ -84,14 +92,14 @@ export default function SerialNumbers() {
                     onChange={(e) => {
                         setStartDate(new Date(e.target.value))
                     }}
-                    value={startDate.toISOString().split('T')[0]}
+                    value={dateToString(startDate)}
                     type='date'
                 />
                 <Input
                     onChange={(e) => {
                         setEndDate(new Date(e.target.value))
                     }}
-                    value={endDate.toISOString().split('T')[0]}
+                    value={dateToString(endDate)}
                     type='date'
                 />
 
