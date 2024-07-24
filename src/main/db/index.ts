@@ -4,16 +4,29 @@ import { InsertSerialNumber, Model, models, SerialNumber, serialNumbers } from '
 import { and, eq, gte, lte, max, SQL } from 'drizzle-orm';
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import path from 'path';
+import log from 'electron-log/main';
+import { app } from 'electron';
 
 function initDB() {
-    const sqlite = new Database('serialgen.db');
+    log.info('Connecting to db')
+
+    const dbPath = (process.env.NODE_ENV === 'development')
+        ? 'serialgen.db'
+        : path.resolve(app.getPath('userData'), 'myDatabase.db'
+    );
+    console.log(dbPath)
+    const sqlite = new Database(dbPath);
+    log.info('db connected')
     const db = drizzle(sqlite, {
         schema: {
             models, serialNumbers
         }
     })
+    log.info('drizzle schemas done')
     const migrationsFolder = path.join(__dirname, "../../drizzle");
+    log.info('running migrations')
     migrate(db, { migrationsFolder: migrationsFolder });
+    log.info('migrations ok')
     return db;
 }
 

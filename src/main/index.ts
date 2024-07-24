@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Db from './db'
 import { writeFile } from 'fs/promises'
+import log from 'electron-log/main';
 
 function createWindow(): void {
+  log.info('Creating window');
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -19,6 +23,7 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
+    log.info('showing window')
     mainWindow.show()
   })
 
@@ -32,6 +37,7 @@ function createWindow(): void {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
+    log.info('loading index.html')
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
@@ -41,6 +47,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 
 app.whenReady().then(() => {
+  log.info('app is ready')
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -51,11 +58,13 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
+  log.info('initing db')
   const db = new Db();
+  log.info('db initted')
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  ipcMain.handle('create-model', async (event: any, ...args: any) => {
+  ipcMain.handle('create-model', async (_: any, ...args: any) => {
     console.log(args)
     //@ts-ignore
     const val = await db.createModel(...args);
@@ -78,16 +87,19 @@ app.whenReady().then(() => {
     return await db.filterSerialNumbers(filters);
   })
 
-  ipcMain.handle('save-file', async (_:any, csv: string, startDate: string, endDate: string, modelName: string) => {
+  ipcMain.handle('save-file', async (_: any, csv: string, startDate: string, endDate: string, modelName: string) => {
     const result = await dialog.showOpenDialog({
       properties: ['openDirectory']
     })
-    if(result.canceled) {
+    if (result.canceled) {
       return null;
     }
-    const filePath = path.join(result.filePaths[0],`serialgen-${startDate}-${endDate}-${modelName}.csv`);
+    const filePath = path.join(result.filePaths[0], `serialgen-${startDate}-${endDate}-${modelName}.csv`);
     await writeFile(filePath, csv);
+    return filePath;
   })
+
+  log.info('calling createWindow()')
 
   createWindow()
 

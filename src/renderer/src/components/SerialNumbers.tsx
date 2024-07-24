@@ -1,7 +1,6 @@
 import { ArrowDownIcon } from "@chakra-ui/icons";
 import { Box, Button, IconButton, Input, Select, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { Model, SerialNumber } from "@renderer/types";
-import { stringify } from "querystring";
 import { useEffect, useState } from "react"
 
 export default function SerialNumbers() {
