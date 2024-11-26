@@ -5,10 +5,10 @@ import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Db from './db'
 import { writeFile } from 'fs/promises'
-import log from 'electron-log/main';
+import log from 'electron-log/main'
 
 function createWindow(): void {
-  log.info('Creating window');
+  log.info('Creating window')
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -59,7 +59,7 @@ app.whenReady().then(() => {
   })
 
   log.info('initing db')
-  const db = new Db();
+  const db = new Db()
   log.info('db initted')
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
@@ -67,37 +67,43 @@ app.whenReady().then(() => {
   ipcMain.handle('create-model', async (_: any, ...args: any) => {
     console.log(args)
     //@ts-ignore
-    const val = await db.createModel(...args);
+    const val = await db.createModel(...args)
     return val
   })
 
-  ipcMain.handle('get-models', async () => await db.getModels());
+  ipcMain.handle('get-models', async () => await db.getModels())
 
   ipcMain.handle('get-model-by-model-name', async (_: any, name: string) => {
-    return await db.getModelByModelName(name);
+    return await db.getModelByModelName(name)
   })
 
   ipcMain.handle('create-serial-number', async (_: any, ...args: any) => {
     //@ts-ignore
-    return await db.createSerialNumber(...args);
+    return await db.createSerialNumber(...args)
   })
 
   ipcMain.handle('filter-serial-numbers', async (_: any, filters: any) => {
     //@ts-ignore
-    return await db.filterSerialNumbers(filters);
+    return await db.filterSerialNumbers(filters)
   })
 
-  ipcMain.handle('save-file', async (_: any, csv: string, startDate: string, endDate: string, modelName: string) => {
-    const result = await dialog.showOpenDialog({
-      properties: ['openDirectory']
-    })
-    if (result.canceled) {
-      return null;
+  ipcMain.handle(
+    'save-file',
+    async (_: any, csv: string, startDate: string, endDate: string, modelName: string) => {
+      const result = await dialog.showOpenDialog({
+        properties: ['openDirectory']
+      })
+      if (result.canceled) {
+        return null
+      }
+      const filePath = path.join(
+        result.filePaths[0],
+        `serialgen-${startDate}-${endDate}-${modelName}.csv`
+      )
+      await writeFile(filePath, csv)
+      return filePath
     }
-    const filePath = path.join(result.filePaths[0], `serialgen-${startDate}-${endDate}-${modelName}.csv`);
-    await writeFile(filePath, csv);
-    return filePath;
-  })
+  )
 
   log.info('calling createWindow()')
 

@@ -5,22 +5,22 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 const api = {
   createModel: (name: string, code: string, productName: string) => {
-    return ipcRenderer.invoke('create-model', name, code, productName);
+    return ipcRenderer.invoke('create-model', name, code, productName)
   },
   getModels: () => {
-    return ipcRenderer.invoke('get-models');
+    return ipcRenderer.invoke('get-models')
   },
   getModelByModelName: (name: string) => {
-    return ipcRenderer.invoke('get-model-by-model-name', name);
+    return ipcRenderer.invoke('get-model-by-model-name', name)
   },
   createSerialNumber: (modelName: string, company: string) => {
-    return ipcRenderer.invoke('create-serial-number', modelName, company);
+    return ipcRenderer.invoke('create-serial-number', modelName, company)
   },
-  filterSerialNumbers: (filters: { modelName?: string, startDate?: Date, endDate?: Date }) => {
-    return ipcRenderer.invoke('filter-serial-numbers', filters);
+  filterSerialNumbers: (filters: { modelName?: string; startDate?: Date; endDate?: Date }) => {
+    return ipcRenderer.invoke('filter-serial-numbers', filters)
   },
   saveFile: (csv: string, startDate: string, endDate: string, modelName: string) => {
-    return ipcRenderer.invoke('save-file', csv, startDate, endDate, modelName);
+    return ipcRenderer.invoke('save-file', csv, startDate, endDate, modelName)
   }
 }
 

@@ -1,8 +1,8 @@
-import { useState } from "react"
-import CreateModel from "./components/CreateModel"
-import CreateSerialNumber from "./components/CreateSerialNumber"
-import { Link } from "@chakra-ui/react";
-import SerialNumbers from "./components/SerialNumbers";
+import { useState } from 'react'
+import CreateModel from './components/CreateModel'
+import CreateSerialNumber from './components/CreateSerialNumber'
+import { Link } from '@chakra-ui/react'
+import SerialNumbers from './components/SerialNumbers'
 
 enum Pages {
   GEN_SERIAL_NOS,
@@ -11,8 +11,7 @@ enum Pages {
 }
 
 function App(): JSX.Element {
-
-  const [page, setPage] = useState<Pages>();
+  const [page, setPage] = useState<Pages>()
 
   return (
     <>

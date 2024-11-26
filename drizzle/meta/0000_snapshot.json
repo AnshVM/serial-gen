@@ -79,12 +79,8 @@
           "name": "serial_numbers_model_name_models_name_fk",
           "tableFrom": "serial_numbers",
           "tableTo": "models",
-          "columnsFrom": [
-            "model_name"
-          ],
-          "columnsTo": [
-            "name"
-          ],
+          "columnsFrom": ["model_name"],
+          "columnsTo": ["name"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
