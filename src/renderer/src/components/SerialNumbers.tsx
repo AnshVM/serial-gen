@@ -130,6 +130,7 @@ export default function SerialNumbers() {
           <Table variant={'simple'}>
             <Thead>
               <Tr>
+                <Th>Sr</Th>
                 <Th>Serial</Th>
                 <Th>Date</Th>
                 <Th>Company</Th>
@@ -139,8 +140,9 @@ export default function SerialNumbers() {
             </Thead>
             <Tbody>
               {serials &&
-                serials.map((serial) => (
+                serials.map((serial, idx) => (
                   <Tr key={serial.serial}>
+                    <Td>{idx}</Td>
                     <Td>{serial.serial}</Td>
                     <Td>{serial.createdAt.toDateString()}</Td>
                     <Td>{serial.company}</Td>
