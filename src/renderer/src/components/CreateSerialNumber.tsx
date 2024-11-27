@@ -9,35 +9,38 @@ export default function CreateSerialNumber() {
   const [models, setModels] = useState<Model[]>()
   const [modelName, setModelName] = useState<string>('')
   const [productName, setProductName] = useState(ProductNames.InfiniPlus)
+  const [batch, setBatch] = useState(1)
   const toast = useToast()
 
   const saveSerialNumber = async () => {
-    const generated = await window.api.createSerialNumber(modelName, COMPANY)
-    if (generated) {
-      toast({
-        title: 'Serial number generated',
-        description: `Serial number: ${generated}`,
-        status: 'success',
-        duration: 3000,
-        isClosable: true
-      })
-    } else {
-      toast({
-        title: 'Serial number failed',
-        description: `There was an error while generating serial numbers`,
-        status: 'error',
-        duration: 9000,
-        isClosable: true
-      })
+    for (let i = 0; i < batch; i++) {
+      const generated = await window.api.createSerialNumber(modelName, COMPANY)
+      if (!generated) {
+        toast({
+          title: 'Serial number failed',
+          description: `There was an error while generating serial numbers`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true
+        })
+        return
+      }
     }
+    toast({
+      title: 'Serial number generated',
+      description: `${batch} serial numbers were generated`,
+      status: 'success',
+      duration: 2000,
+      isClosable: true
+    })
   }
 
   const refreshModels = () => {
-    if(productName) {
+    if (productName) {
       window.api
         .getModelsByProductName(productName)
         .then((models: Model[]) => {
-          setModels(models);
+          setModels(models)
           setModelName(models[0].name)
         })
         .catch(() => console.log('Error while fetching models'))
@@ -78,6 +81,10 @@ export default function CreateSerialNumber() {
                 </option>
               ))}
           </Select>
+        </div>
+        <div className="flex flex-col">
+          <Text>Batch</Text>
+          <Input type="number" value={batch} onChange={(e) => setBatch(Number(e.target.value))} />
         </div>
       </div>
       <Button
