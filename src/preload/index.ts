@@ -1,11 +1,15 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { ProductNames } from '../main/db'
 
 // Custom APIs for renderer
 
 const api = {
-  createModel: (name: string, code: string, productName: string) => {
+  createModel: (name: string, code: string, productName: ProductNames) => {
     return ipcRenderer.invoke('create-model', name, code, productName)
+  },
+  getModelsByProductName: (productName: ProductNames) => {
+    return ipcRenderer.invoke('get-models-by-product-name', productName);
   },
   getModels: () => {
     return ipcRenderer.invoke('get-models')

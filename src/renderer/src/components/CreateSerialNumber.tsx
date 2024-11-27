@@ -1,12 +1,14 @@
 import { Button, Input, Select, Text, useToast } from '@chakra-ui/react'
 import { Model } from '@renderer/types'
 import { useEffect, useState } from 'react'
+import { ProductNames } from './CreateModel'
 
 const COMPANY = 'EBM'
 
 export default function CreateSerialNumber() {
   const [models, setModels] = useState<Model[]>()
   const [modelName, setModelName] = useState<string>('')
+  const [productName, setProductName] = useState(ProductNames.InfiniPlus)
   const toast = useToast()
 
   const saveSerialNumber = async () => {
@@ -31,18 +33,20 @@ export default function CreateSerialNumber() {
   }
 
   const refreshModels = () => {
-    window.api
-      .getModels()
-      .then((models: Model[]) => {
-        setModels(models)
-        setModelName(models[0].name)
-      })
-      .catch(() => console.log('Error while fetching models'))
+    if(productName) {
+      window.api
+        .getModelsByProductName(productName)
+        .then((models: Model[]) => {
+          setModels(models);
+          setModelName(models[0].name)
+        })
+        .catch(() => console.log('Error while fetching models'))
+    }
   }
 
   useEffect(() => {
     refreshModels()
-  }, [])
+  }, [productName])
 
   return (
     <div className="pt-4 flex flex-col gap-4">
@@ -51,6 +55,18 @@ export default function CreateSerialNumber() {
         <div className="flex flex-col">
           <Text>Company name</Text>
           <Input width={60} value={COMPANY} onChange={() => {}} />
+        </div>
+        <div className="flex flex-col">
+          <Text>Product Name</Text>
+          <Select
+            value={productName}
+            onChange={(e) => setProductName(e.target.value as ProductNames)}
+          >
+            <option value={ProductNames.InfiniPlus}>{ProductNames.InfiniPlus}</option>
+            <option value={ProductNames.InfiniPro}>{ProductNames.InfiniPro}</option>
+            <option value={ProductNames.InfiniStar}>{ProductNames.InfiniStar}</option>
+            <option value={ProductNames.Databox}>{ProductNames.Databox}</option>
+          </Select>
         </div>
         <div className="flex flex-col">
           <Text>Model name</Text>

@@ -31,12 +31,27 @@ function initDB() {
   return db
 }
 
+export enum ProductNames {
+  InfiniPlus = 'InfiniPlus',
+  InfiniPro = 'InfiniPro',
+  InfiniStar = 'InfiniStar',
+  Databox = 'Databox'
+}
+
+const ProductSerials = {
+  [ProductNames.InfiniPlus]: 'a',
+  [ProductNames.InfiniPro]: 'b',
+  [ProductNames.InfiniStar]: 'c',
+  [ProductNames.Databox]: 'd'
+}
+// Gen - add product field (infiniplus - a, infinipro - b, inifinistar - c, databox- d)
+
 export default class Db {
   private db = initDB()
 
-  constructor() {}
+  constructor() { }
 
-  async createModel(name: string, code: string, productName: string) {
+  async createModel(name: string, code: string, productName: ProductNames) {
     try {
       console.log('here')
       await this.db.insert(models).values({ name, code, productName })
@@ -44,6 +59,17 @@ export default class Db {
     } catch (error) {
       console.log(error)
       return false
+    }
+  }
+
+  async getModelsByProductName(productName: string): Promise<Model[]> {
+    try {
+      return this.db.query.models.findMany({
+        where: eq(models.productName, productName)
+      });
+    } catch (error) {
+      console.log(error);
+      return [];
     }
   }
 

@@ -14,9 +14,17 @@ type SerialNumber = {
   modelName: string
 }
 
+export enum ProductNames {
+  InfiniPlus = 'InfiniPlus',
+  InfiniPro = 'InfiniPro',
+  InfiniStar = 'InfiniStar',
+  Databox = 'Databox'
+}
+
 export interface API {
-  createModel: (name: string, code: string, productName: string) => Promise<boolean>
+  createModel: (name: string, code: string, productName: ProductNames) => Promise<boolean>
   getModels: () => Promise<Model[]>
+  getModelsByProductName: (productName: ProductNames) => Promise<Model[]>
   getModelByModelName: (name: string) => Promise<Model>
   createSerialNumber: (modelName: string, company: string) => Promise<string | null>
   filterSerialNumbers: (filters: {

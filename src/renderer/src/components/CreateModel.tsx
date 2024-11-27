@@ -1,12 +1,19 @@
-import { Button, Input, useToast } from '@chakra-ui/react'
+import { Button, Input, Select, useToast } from '@chakra-ui/react'
 import { useState } from 'react'
+
+export enum ProductNames {
+  InfiniPlus = 'InfiniPlus',
+  InfiniPro = 'InfiniPro',
+  InfiniStar = 'InfiniStar',
+  Databox = 'Databox'
+}
 
 export default function CreateModel() {
   // name code productName
 
   const [name, setName] = useState('')
   const [code, setCode] = useState('')
-  const [productName, setProductName] = useState('')
+  const [productName, setProductName] = useState(ProductNames.InfiniPlus)
   const toast = useToast()
 
   const handleSaveModel = async () => {
@@ -38,11 +45,15 @@ export default function CreateModel() {
       <div className="flex flex-row gap-4 px-4">
         <Input placeholder="Model name" value={name} onChange={(e) => setName(e.target.value)} />
         <Input placeholder="Model code" value={code} onChange={(e) => setCode(e.target.value)} />
-        <Input
-          placeholder="Product name"
+        <Select
           value={productName}
-          onChange={(e) => setProductName(e.target.value)}
-        />
+          onChange={(e) => setProductName(e.target.value as ProductNames)}
+        >
+          <option value={ProductNames.InfiniPlus}>{ProductNames.InfiniPlus}</option>
+          <option value={ProductNames.InfiniPro}>{ProductNames.InfiniPro}</option>
+          <option value={ProductNames.InfiniStar}>{ProductNames.InfiniStar}</option>
+          <option value={ProductNames.Databox}>{ProductNames.Databox}</option>
+        </Select>
       </div>
       <Button
         colorScheme="teal"

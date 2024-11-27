@@ -3,7 +3,7 @@
 import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import path, { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import Db from './db'
+import Db, { ProductNames } from './db'
 import { writeFile } from 'fs/promises'
 import log from 'electron-log/main'
 
@@ -85,6 +85,10 @@ app.whenReady().then(() => {
   ipcMain.handle('filter-serial-numbers', async (_: any, filters: any) => {
     //@ts-ignore
     return await db.filterSerialNumbers(filters)
+  })
+
+  ipcMain.handle('get-models-by-product-name', async(_: any, productName: ProductNames) => {
+    return await db.getModelsByProductName(productName);
   })
 
   ipcMain.handle(
