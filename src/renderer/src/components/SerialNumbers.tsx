@@ -88,66 +88,74 @@ export default function SerialNumbers() {
   }
 
   return (
-    <div className="pl-2">
-      <h1 className="text-3xl font-semibold text-center text-teal-700">Serial Numbers</h1>
+    <div className="flex flex-col h-screen">
+      {/* Fixed Header */}
+      <div className="pl-2 bg-white shadow-md sticky top-0 z-10">
+        <h1 className="text-3xl font-semibold text-center text-teal-700">Serial Numbers</h1>
 
-      <div className="flex flex-row justify-center gap-4">
-        <Select value={modelName} onChange={(e) => setModelName(e.target.value)}>
-          {models &&
-            models.map((model) => (
-              <option key={model.name} value={model.name}>
-                {model.name}-{model.productName}
-              </option>
-            ))}
-        </Select>
-        <Input
-          onChange={(e) => {
-            console.log(e.target.value)
-            setStartDate(new Date(e.target.value))
-          }}
-          value={dateToString(startDate)}
-          type="date"
-        />
-        <Input
-          onChange={(e) => {
-            console.log(e.target.value)
-            setEndDate(new Date(e.target.value))
-          }}
-          value={dateToString(endDate)}
-          type="date"
-        />
-      </div>
-      <Button className="my-4" colorScheme="teal" onClick={applyFilters}>
-        Apply filters
-      </Button>
-
-      <TableContainer>
-        <Table variant={'simple'}>
-          <Thead>
-            <Tr>
-              <Th>Serial</Th>
-              <Th>Date</Th>
-              <Th>Company</Th>
-              <Th>Model</Th>
-              <Th>Sequence</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {serials &&
-              serials.map((serial) => (
-                <Tr key={serial.serial}>
-                  <Td>{serial.serial}</Td>
-                  <Td>{serial.createdAt.toDateString()}</Td>
-                  <Td>{serial.company}</Td>
-                  <Td>
-                    {serial.modelName}-{getModel(serial)?.productName}
-                  </Td>
-                  <Td>{serial.sequence.toString().padStart(4, '0')}</Td>
-                </Tr>
+        <div className="flex flex-row justify-center gap-4 mt-4">
+          <Select value={modelName} onChange={(e) => setModelName(e.target.value)}>
+            {models &&
+              models.map((model) => (
+                <option key={model.name} value={model.name}>
+                  {model.name}-{model.productName}
+                </option>
               ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+          </Select>
+          <Input
+            onChange={(e) => {
+              console.log(e.target.value)
+              setStartDate(new Date(e.target.value))
+            }}
+            value={dateToString(startDate)}
+            type="date"
+          />
+          <Input
+            onChange={(e) => {
+              console.log(e.target.value)
+              setEndDate(new Date(e.target.value))
+            }}
+            value={dateToString(endDate)}
+            type="date"
+          />
+        </div>
+        <Button className="my-4" colorScheme="teal" onClick={applyFilters}>
+          Apply filters
+        </Button>
+      </div>
+
+      {/* Scrollable Table */}
+      <div className="flex-1 overflow-auto">
+        <TableContainer>
+          <Table variant={'simple'}>
+            <Thead>
+              <Tr>
+                <Th>Serial</Th>
+                <Th>Date</Th>
+                <Th>Company</Th>
+                <Th>Model</Th>
+                <Th>Sequence</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {serials &&
+                serials.map((serial) => (
+                  <Tr key={serial.serial}>
+                    <Td>{serial.serial}</Td>
+                    <Td>{serial.createdAt.toDateString()}</Td>
+                    <Td>{serial.company}</Td>
+                    <Td>
+                      {serial.modelName}-{getModel(serial)?.productName}
+                    </Td>
+                    <Td>{serial.sequence.toString().padStart(4, '0')}</Td>
+                  </Tr>
+                ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </div>
+
+      {/* Floating Download Button */}
       <Box position="fixed" bottom={4} right={4} zIndex={2}>
         <IconButton
           onClick={handleDownload}
