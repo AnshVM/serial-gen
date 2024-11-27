@@ -1,5 +1,18 @@
-import { Button, Input, Select, useToast } from '@chakra-ui/react'
-import { useState } from 'react'
+import {
+  Button,
+  Input,
+  Select,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useToast
+} from '@chakra-ui/react'
+import { Model } from '@renderer/types'
+import { useEffect, useState } from 'react'
 
 export enum ProductNames {
   InfiniPlus = 'InfiniPlus',
@@ -13,6 +26,7 @@ export default function CreateModel() {
 
   const [name, setName] = useState('')
   const [code, setCode] = useState('')
+  const [models, setModels] = useState<Model[]>([])
   const [productName, setProductName] = useState(ProductNames.InfiniPlus)
   const toast = useToast()
 
@@ -39,6 +53,21 @@ export default function CreateModel() {
     }
   }
 
+  const refreshModels = () => {
+    if (productName) {
+      window.api
+        .getModelsByProductName(productName)
+        .then((models: Model[]) => {
+          setModels(models)
+        })
+        .catch(() => console.log('Error while fetching models'))
+    }
+  }
+
+  useEffect(() => {
+    refreshModels()
+  })
+
   return (
     <div className="pt-4 flex flex-col gap-4">
       <h1 className="text-3xl font-semibold text-center text-teal-700">Create Model</h1>
@@ -63,6 +92,28 @@ export default function CreateModel() {
       >
         Create Model
       </Button>
+
+      <TableContainer>
+        <Table variant={'simple'}>
+          <Thead>
+            <Tr>
+              <Th>Name</Th>
+              <Th>Product name</Th>
+              <Th>Code</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {models &&
+              models.map((model: Model) => (
+                <Tr key={model.name + model.code + model.productName}>
+                  <Td>{model.name}</Td>
+                  <Td>{model.productName}</Td>
+                  <Td>{model.code}</Td>
+                </Tr>
+              ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }
