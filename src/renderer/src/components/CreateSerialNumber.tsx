@@ -18,7 +18,7 @@ export default function CreateSerialNumber() {
         title: 'Serial number generated',
         description: `Serial number: ${generated}`,
         status: 'success',
-        duration: 9000,
+        duration: 3000,
         isClosable: true
       })
     } else {
