@@ -105,7 +105,7 @@ export default class Db {
       const createdAt = new Date()
       const serialString = this.generateSerialString(
         company,
-        model.name,
+        ProductSerials[model.productName],
         model.code,
         sequence,
         createdAt
@@ -156,14 +156,14 @@ export default class Db {
 
   private generateSerialString(
     company: string,
-    modelName: string,
+    productSerial: string,
     modelCode: string,
     sequence: number,
     createdAt: Date
   ): string {
     const sequenceStr = sequence.toString().padStart(4, '0')
     const mmyy = this.formatDateToMMYY(createdAt)
-    return `${company}-${modelName}${modelCode}-${mmyy}-${sequenceStr}`
+    return `${company}-${productSerial}${modelCode}-${mmyy}-${sequenceStr}`
   }
 
   private async getLastSequenceForModel(modelName: string): Promise<number> {
