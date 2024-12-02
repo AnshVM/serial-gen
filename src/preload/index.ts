@@ -17,8 +17,8 @@ const api = {
   getModelByModelName: (name: string) => {
     return ipcRenderer.invoke('get-model-by-model-name', name)
   },
-  createSerialNumber: (modelName: string, company: string) => {
-    return ipcRenderer.invoke('create-serial-number', modelName, company)
+  createSerialNumber: (modelName: string, company: string, date?: number) => {
+    return ipcRenderer.invoke('create-serial-number', modelName, company, date)
   },
   filterSerialNumbers: (filters: { modelName?: string; startDate?: Date; endDate?: Date }) => {
     return ipcRenderer.invoke('filter-serial-numbers', filters)

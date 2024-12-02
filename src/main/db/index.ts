@@ -93,7 +93,7 @@ export default class Db {
     await this.db.delete(models).where(eq(models.name, name))
   }
 
-  async createSerialNumber(modelName: string, company: string) {
+  async createSerialNumber(modelName: string, company: string, date?: number) {
     try {
       const model = await this.getModelByModelName(modelName)
 
@@ -102,7 +102,7 @@ export default class Db {
       }
 
       const sequence = (await this.getLastSequenceForModel(modelName)) + 1
-      const createdAt = new Date()
+      const createdAt = date ? new Date(date) : new Date();
       const serialString = this.generateSerialString(
         company,
         ProductSerials[model.productName],

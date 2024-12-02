@@ -5,16 +5,24 @@ import { ProductNames } from './CreateModel'
 
 const COMPANY = 'EBM'
 
+const dateToString = (date: Date) => {
+  const offset = date.getTimezoneOffset()
+  date = new Date(date.getTime() - offset * 60 * 1000)
+  return date.toISOString().split('T')[0]
+}
+
 export default function CreateSerialNumber() {
   const [models, setModels] = useState<Model[]>()
   const [modelName, setModelName] = useState<string>('')
   const [productName, setProductName] = useState(ProductNames.InfiniPlus)
+  const [date, setDate] = useState<Date>(new Date())
   const [batch, setBatch] = useState(1)
   const toast = useToast()
 
   const saveSerialNumber = async () => {
     for (let i = 0; i < batch; i++) {
-      const generated = await window.api.createSerialNumber(modelName, COMPANY)
+      const generated = await window.api.createSerialNumber(modelName, COMPANY, Number(date))
+      console.log(generated)
       if (!generated) {
         toast({
           title: 'Serial number failed',
@@ -85,6 +93,17 @@ export default function CreateSerialNumber() {
         <div className="flex flex-col">
           <Text>Batch</Text>
           <Input type="number" value={batch} onChange={(e) => setBatch(Number(e.target.value))} />
+        </div>
+        <div className="flex flex-col">
+          <Text>Date (optional) </Text>
+          <Input
+            type="date"
+            value={dateToString(date)}
+            onChange={(e) => {
+              console.log('Date: ' + e.target.value)
+              setDate(new Date(e.target.value))
+            }}
+          />
         </div>
       </div>
       <Button
