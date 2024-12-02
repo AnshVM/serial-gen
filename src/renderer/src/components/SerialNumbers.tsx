@@ -1,4 +1,4 @@
-import { ArrowDownIcon, DeleteIcon, ChevronUpIcon} from '@chakra-ui/icons'
+import { ArrowDownIcon, DeleteIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { Model, SerialNumber } from '@renderer/types'
 import { useEffect, useState } from 'react'
+import { ProductNames } from './CreateModel'
 
 const dateToString = (date: Date) => {
   const offset = date.getTimezoneOffset()
@@ -22,7 +23,10 @@ const dateToString = (date: Date) => {
   return date.toISOString().split('T')[0]
 }
 
+let allModels: Model[] = []
+
 export default function SerialNumbers() {
+  const [productName, setProcutName] = useState<ProductNames | 'any'>('any')
   const [serials, setSerials] = useState<SerialNumber[]>()
   const [models, setModels] = useState<Model[]>()
   const [modelName, setModelName] = useState('')
@@ -30,7 +34,7 @@ export default function SerialNumbers() {
   const [endDate, setEndDate] = useState<Date>(new Date())
 
   const getModel = (serialNumber: SerialNumber) => {
-    return models?.find((model) => serialNumber.modelName === model.name)
+    return allModels?.find((model) => serialNumber.modelName === model.name)
   }
 
   const applyFilters = () => {
@@ -84,6 +88,7 @@ export default function SerialNumbers() {
     window.api
       .getModels()
       .then((res) => {
+        allModels = res
         res.push({ name: '', code: '', productName: '' })
         setModels(res.reverse())
       })
@@ -94,6 +99,19 @@ export default function SerialNumbers() {
     refresh()
   }, [])
 
+  useEffect(() => {
+    console.log(productName);
+    if(productName === 'any') return;
+    console.log(productName);
+    window.api
+      .getModelsByProductName(productName)
+      .then((res) => {
+        res.push({ name: '', code: '', productName: '' })
+        setModels(res.reverse())
+      })
+      .catch((err) => console.log(err))
+  }, [productName])
+
   return (
     <div className="flex flex-col h-screen">
       {/* Fixed Header */}
@@ -101,6 +119,26 @@ export default function SerialNumbers() {
         <h1 className="text-3xl font-semibold text-center text-teal-700">Serial Numbers</h1>
 
         <div className="flex flex-row justify-center gap-4 mt-4">
+          <Select
+            value={productName.toString()}
+            onChange={(e) => setProcutName(e.target.value as ProductNames | 'any')}
+          >
+            <option key={0} value="any">
+              All
+            </option>
+            <option key={1} value={ProductNames.Databox}>
+              {ProductNames.Databox}
+            </option>
+            <option key={2} value={ProductNames.InfiniPlus}>
+              {ProductNames.InfiniPlus}
+            </option>
+            <option key={3} value={ProductNames.InfiniPro}>
+              {ProductNames.InfiniPro}
+            </option>
+            <option key={4} value={ProductNames.InfiniStar}>
+              {ProductNames.InfiniStar}
+            </option>
+          </Select>
           <Select value={modelName} onChange={(e) => setModelName(e.target.value)}>
             {models &&
               models.map((model) => (
