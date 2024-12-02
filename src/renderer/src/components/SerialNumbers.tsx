@@ -1,4 +1,4 @@
-import { ArrowDownIcon, DeleteIcon } from '@chakra-ui/icons'
+import { ArrowDownIcon, DeleteIcon, ChevronUpIcon} from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -15,6 +15,12 @@ import {
 } from '@chakra-ui/react'
 import { Model, SerialNumber } from '@renderer/types'
 import { useEffect, useState } from 'react'
+
+const dateToString = (date: Date) => {
+  const offset = date.getTimezoneOffset()
+  date = new Date(date.getTime() - offset * 60 * 1000)
+  return date.toISOString().split('T')[0]
+}
 
 export default function SerialNumbers() {
   const [serials, setSerials] = useState<SerialNumber[]>()
@@ -87,14 +93,6 @@ export default function SerialNumbers() {
   useEffect(() => {
     refresh()
   }, [])
-
-  const dateToString = (date: Date) => {
-    date.setHours(0)
-    date.setMinutes(0)
-    date.setSeconds(0)
-    date.setMilliseconds(0)
-    return date.toISOString().split('T')[0]
-  }
 
   return (
     <div className="flex flex-col h-screen">
