@@ -25,6 +25,9 @@ const api = {
   },
   saveFile: (csv: string, startDate: string, endDate: string, modelName: string) => {
     return ipcRenderer.invoke('save-file', csv, startDate, endDate, modelName)
+  },
+  deleteSerial: (serial: string) => {
+    return ipcRenderer.invoke('delete-serial', serial);
   }
 }
 

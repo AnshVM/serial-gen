@@ -1,4 +1,4 @@
-import { ArrowDownIcon } from '@chakra-ui/icons'
+import { ArrowDownIcon, DeleteIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -47,6 +47,11 @@ export default function SerialNumbers() {
     )
   }
 
+  const handleDelete = async (serial: string) => {
+    await window.api.deleteSerial(serial)
+    refresh()
+  }
+
   const generateCsv = () => {
     let rows = [['Serial', 'Date', 'Company', 'Model', 'Sequence'].join(',')]
     if (serials) {
@@ -64,7 +69,7 @@ export default function SerialNumbers() {
     return rows.join('\n')
   }
 
-  useEffect(() => {
+  const refresh = () => {
     window.api
       .filterSerialNumbers({})
       .then((res) => setSerials(res))
@@ -77,6 +82,10 @@ export default function SerialNumbers() {
         setModels(res.reverse())
       })
       .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    refresh()
   }, [])
 
   const dateToString = (date: Date) => {
@@ -136,6 +145,7 @@ export default function SerialNumbers() {
                 <Th>Company</Th>
                 <Th>Model</Th>
                 <Th>Sequence</Th>
+                <Th></Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -150,6 +160,13 @@ export default function SerialNumbers() {
                       {serial.modelName}-{getModel(serial)?.productName}
                     </Td>
                     <Td>{serial.sequence.toString().padStart(4, '0')}</Td>
+                    <Td>
+                      <DeleteIcon
+                        cursor={'pointer'}
+                        color={'red'}
+                        onClick={async () => await handleDelete(serial.serial)}
+                      />
+                    </Td>
                   </Tr>
                 ))}
             </Tbody>

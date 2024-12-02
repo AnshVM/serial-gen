@@ -91,6 +91,10 @@ app.whenReady().then(() => {
     return await db.getModelsByProductName(productName);
   })
 
+  ipcMain.handle('delete-serial', async (_:any, serial: string) => {
+    return await db.deleteSerial(serial);
+  })
+
   ipcMain.handle(
     'save-file',
     async (_: any, csv: string, startDate: string, endDate: string, modelName: string) => {

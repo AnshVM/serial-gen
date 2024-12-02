@@ -1,14 +1,14 @@
 import { describe, expect, test } from 'vitest'
-import Db from '../db'
+import Db, { ProductNames } from '../db'
 import { InsertModel } from '../db/schema'
 
 describe('models and serial numbers', () => {
   const db = new Db()
 
   const populateModels = async () => {
-    await db.createModel('a', 'a1', 'Product A')
-    await db.createModel('b', 'a2', 'Product B')
-    await db.createModel('c', 'a3', 'Product C')
+    await db.createModel('a', 'a1', ProductNames.Databox)
+    await db.createModel('b', 'a2', ProductNames.InfiniPlus)
+    await db.createModel('c', 'a3', ProductNames.InfiniPro)
   }
 
   const unpopulateModels = async () => {
@@ -25,18 +25,18 @@ describe('models and serial numbers', () => {
   })
 
   test('create models', async () => {
-    await db.createModel('x', 'x1', 'xbox')
+    await db.createModel('x', 'x1', ProductNames.Databox)
     const model = await db.getModelByModelName('x')
     expect(model).toBeDefined()
     expect(model?.name).toBe('x')
     expect(model?.code).toBe('x1')
-    expect(model?.productName).toBe('xbox')
+    expect(model?.productName).toBe('Databox')
     await db.deleteModelByModelName('x')
   })
 
   test('serial numbers', async () => {
-    const model: InsertModel = { name: 'a', code: 'a1', productName: 'ABOX' }
-    await db.createModel(model.name, model.code, model.productName)
+    const model: InsertModel = { name: 'a', code: 'a1', productName: ProductNames.InfiniStar}
+    await db.createModel(model.name, model.code, model.productName as ProductNames)
 
     await db.createSerialNumber(model.name, 'EBM')
     await db.createSerialNumber(model.name, 'EBM')
@@ -55,11 +55,11 @@ describe('models and serial numbers', () => {
   })
 
   test('seral numbers filter', async () => {
-    const model: InsertModel = { name: 'a', code: 'a1', productName: 'ABOX' }
-    await db.createModel(model.name, model.code, model.productName)
+    const model: InsertModel = { name: 'a', code: 'a1', productName: ProductNames.InfiniPlus }
+    await db.createModel(model.name, model.code, model.productName as ProductNames)
 
-    const model2: InsertModel = { name: 'b', code: 'b1', productName: 'BBOX' }
-    await db.createModel(model2.name, model2.code, model2.productName)
+    const model2: InsertModel = { name: 'b', code: 'b1', productName: ProductNames.InfiniStar}
+    await db.createModel(model2.name, model2.code, model2.productName as ProductNames)
 
     await db.createSerialNumber(model.name, 'EBM')
     await db.createSerialNumber(model.name, 'EBM')

@@ -128,6 +128,10 @@ export default class Db {
     }
   }
 
+  async deleteSerial(serial: string) {
+    await this.db.delete(serialNumbers).where(eq(serialNumbers.serial, serial));
+  }
+
   async getSerialNumbersByModelName(model: string): Promise<SerialNumber[]> {
     return this.db.query.serialNumbers.findMany({
       where: eq(serialNumbers.modelName, model)
