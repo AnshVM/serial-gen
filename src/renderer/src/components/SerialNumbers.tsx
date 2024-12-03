@@ -1,4 +1,4 @@
-import { ArrowDownIcon, DeleteIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import { ArrowDownIcon, DeleteIcon, ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -32,6 +32,44 @@ export default function SerialNumbers() {
   const [modelName, setModelName] = useState('')
   const [startDate, setStartDate] = useState<Date>(new Date(0))
   const [endDate, setEndDate] = useState<Date>(new Date())
+  const [sortColumn, setSortColumn] = useState<'sr' | 'sequence' | 'date'>('sr')
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+
+  const toggleSort = (column: 'sr' | 'sequence' | 'date') => {
+    if (sortColumn === column) {
+      // Toggle direction if the same column is clicked
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))
+    } else {
+      // Set the column and default direction to ascending
+      setSortColumn(column)
+      setSortDirection('asc')
+    }
+  }
+
+  const sortedSerials = () => {
+    if (!serials) return []
+    const sorted = [...serials]
+    sorted.sort((a, b) => {
+      let valA, valB
+
+      if (sortColumn === 'sr') {
+        valA = serials.indexOf(a)
+        valB = serials.indexOf(b)
+      } else if (sortColumn === 'sequence') {
+        valA = a.sequence
+        valB = b.sequence
+      } else if (sortColumn === 'date') {
+        valA = new Date(a.createdAt).getTime()
+        valB = new Date(b.createdAt).getTime()
+      }
+
+      if (valA < valB) return sortDirection === 'asc' ? -1 : 1
+      if (valA > valB) return sortDirection === 'asc' ? 1 : -1
+      return 0
+    })
+
+    return sorted
+  }
 
   const getModel = (serialNumber: SerialNumber) => {
     return allModels?.find((model) => serialNumber.modelName === model.name)
@@ -100,9 +138,9 @@ export default function SerialNumbers() {
   }, [])
 
   useEffect(() => {
-    console.log(productName);
-    if(productName === 'any') return;
-    console.log(productName);
+    console.log(productName)
+    if (productName === 'any') return
+    console.log(productName)
     window.api
       .getModelsByProductName(productName)
       .then((res) => {
@@ -177,34 +215,59 @@ export default function SerialNumbers() {
               <Tr>
                 <Th>Sr</Th>
                 <Th>Serial</Th>
-                <Th>Date</Th>
+                <Th>
+                  <div
+                    className="flex items-center cursor-pointer"
+                    onClick={() => toggleSort('date')}
+                  >
+                    Date
+                    {sortColumn === 'date' &&
+                      (sortDirection === 'asc' ? (
+                        <ChevronUpIcon ml={1} />
+                      ) : (
+                        <ChevronDownIcon ml={1} />
+                      ))}
+                  </div>
+                </Th>
                 <Th>Company</Th>
                 <Th>Model</Th>
-                <Th>Sequence</Th>
+                <Th>
+                  <div
+                    className="flex items-center cursor-pointer"
+                    onClick={() => toggleSort('sequence')}
+                  >
+                    Sequence
+                    {sortColumn === 'sequence' &&
+                      (sortDirection === 'asc' ? (
+                        <ChevronUpIcon ml={1} />
+                      ) : (
+                        <ChevronDownIcon ml={1} />
+                      ))}
+                  </div>
+                </Th>
                 <Th></Th>
               </Tr>
             </Thead>
             <Tbody>
-              {serials &&
-                serials.map((serial, idx) => (
-                  <Tr key={serial.serial}>
-                    <Td>{idx}</Td>
-                    <Td>{serial.serial}</Td>
-                    <Td>{serial.createdAt.toDateString()}</Td>
-                    <Td>{serial.company}</Td>
-                    <Td>
-                      {serial.modelName}-{getModel(serial)?.productName}
-                    </Td>
-                    <Td>{serial.sequence.toString().padStart(4, '0')}</Td>
-                    <Td>
-                      <DeleteIcon
-                        cursor={'pointer'}
-                        color={'red'}
-                        onClick={async () => await handleDelete(serial.serial)}
-                      />
-                    </Td>
-                  </Tr>
-                ))}
+              {sortedSerials().map((serial, idx) => (
+                <Tr key={serial.serial}>
+                  <Td>{idx}</Td>
+                  <Td>{serial.serial}</Td>
+                  <Td>{serial.createdAt.toDateString()}</Td>
+                  <Td>{serial.company}</Td>
+                  <Td>
+                    {serial.modelName}-{getModel(serial)?.productName}
+                  </Td>
+                  <Td>{serial.sequence.toString().padStart(4, '0')}</Td>
+                  <Td>
+                    <DeleteIcon
+                      cursor={'pointer'}
+                      color={'red'}
+                      onClick={async () => await handleDelete(serial.serial)}
+                    />
+                  </Td>
+                </Tr>
+              ))}
             </Tbody>
           </Table>
         </TableContainer>
