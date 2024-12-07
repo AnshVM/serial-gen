@@ -91,7 +91,8 @@ export default function SerialNumbers() {
       generateCsv(),
       startDate.toISOString().split('T')[0],
       endDate.toISOString().split('T')[0],
-      modelName
+      modelName,
+      serials ? serials.map(serial => serial.serial) : []
     )
   }
 

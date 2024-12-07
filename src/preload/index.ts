@@ -23,8 +23,8 @@ const api = {
   filterSerialNumbers: (filters: { modelName?: string; startDate?: Date; endDate?: Date }) => {
     return ipcRenderer.invoke('filter-serial-numbers', filters)
   },
-  saveFile: (csv: string, startDate: string, endDate: string, modelName: string) => {
-    return ipcRenderer.invoke('save-file', csv, startDate, endDate, modelName)
+  saveFile: (csv: string, startDate: string, endDate: string, modelName: string, serials: string[]) => {
+    return ipcRenderer.invoke('save-file', csv, startDate, endDate, modelName, serials)
   },
   deleteSerial: (serial: string) => {
     return ipcRenderer.invoke('delete-serial', serial);

@@ -37,7 +37,8 @@ export interface API {
     csv: string,
     startDate: string,
     endDate: string,
-    modelName: string
+    modelName: string,
+    serials: string[]
   ) => Promise<string | null>
 }
 

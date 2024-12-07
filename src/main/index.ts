@@ -6,6 +6,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Db, { ProductNames } from './db'
 import { writeFile } from 'fs/promises'
 import log from 'electron-log/main'
+import BwipJs from '@bwip-js/node'
 
 function createWindow(): void {
   log.info('Creating window')
@@ -87,29 +88,53 @@ app.whenReady().then(() => {
     return await db.filterSerialNumbers(filters)
   })
 
-  ipcMain.handle('get-models-by-product-name', async(_: any, productName: ProductNames) => {
+  ipcMain.handle('get-models-by-product-name', async (_: any, productName: ProductNames) => {
     return await db.getModelsByProductName(productName);
   })
 
-  ipcMain.handle('delete-serial', async (_:any, serial: string) => {
+  ipcMain.handle('delete-serial', async (_: any, serial: string) => {
     return await db.deleteSerial(serial);
   })
 
   ipcMain.handle(
     'save-file',
-    async (_: any, csv: string, startDate: string, endDate: string, modelName: string) => {
-      const result = await dialog.showOpenDialog({
-        properties: ['openDirectory']
-      })
-      if (result.canceled) {
+    async (_: any, csv: string, startDate: string, endDate: string, modelName: string, serials: string[]) => {
+      try {
+
+        const result = await dialog.showOpenDialog({
+          properties: ['openDirectory']
+        })
+        if (result.canceled) {
+          return null
+        }
+        const filePath = path.join(
+          result.filePaths[0],
+          `serialgen-${startDate}-${endDate}-${modelName}.csv`
+        )
+        await writeFile(filePath, csv)
+
+        for (const serial of serials) {
+          const svg = BwipJs.toSVG({
+            bcid: 'code128',
+            text: serial,
+            height: 12,
+            includetext: true,
+            textxalign: 'center',
+            textcolor: 'ff0000'
+          });
+
+          const filePath = path.join(
+            result.filePaths[0],
+            `${serial}-barcode.svg`
+          )
+          
+          await writeFile(filePath, svg);
+        }
+        return filePath
+      } catch(err) {
+        console.log(err);
         return null
       }
-      const filePath = path.join(
-        result.filePaths[0],
-        `serialgen-${startDate}-${endDate}-${modelName}.csv`
-      )
-      await writeFile(filePath, csv)
-      return filePath
     }
   )
 

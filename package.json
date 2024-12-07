@@ -25,6 +25,7 @@
     "make": "electron-forge make"
   },
   "dependencies": {
+    "@bwip-js/node": "^4.5.1",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
     "@electron-toolkit/preload": "^3.0.1",
@@ -32,10 +33,12 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "better-sqlite3": "^11.6.0",
+    "canvas": "^2.11.2",
     "drizzle-orm": "^0.32.2",
     "electron-log": "^5.1.7",
     "electron-squirrel-startup": "^1.0.1",
-    "framer-motion": "^11.3.4"
+    "framer-motion": "^11.3.4",
+    "jsbarcode": "^3.11.6"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.4.0",
