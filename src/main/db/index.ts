@@ -167,7 +167,7 @@ export default class Db {
   ): string {
     const sequenceStr = sequence.toString().padStart(4, '0')
     const mmyy = this.formatDateToMMYY(createdAt)
-    return `${company}-${productSerial}${modelCode}-${mmyy}-${sequenceStr}`
+    return `${company}${productSerial}${modelCode}${mmyy}${sequenceStr}`
   }
 
   private async getLastSequenceForModel(modelName: string): Promise<number> {
