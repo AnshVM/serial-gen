@@ -76,7 +76,7 @@ export default function CreateSerialNumber() {
             <option value={ProductNames.InfiniPlus}>{ProductNames.InfiniPlus}</option>
             <option value={ProductNames.InfiniPro}>{ProductNames.InfiniPro}</option>
             <option value={ProductNames.InfiniStor}>{ProductNames.InfiniStor}</option>
-            <option value={ProductNames.Databox}>{ProductNames.Databox}</option>
+            <option value={ProductNames.DataBox}>{ProductNames.DataBox}</option>
           </Select>
         </div>
         <div className="flex flex-col">

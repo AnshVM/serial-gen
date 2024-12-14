@@ -35,16 +35,16 @@ export enum ProductNames {
   InfiniPlus = 'InfiniPlus',
   InfiniPro = 'InfiniPro',
   InfiniStor = 'InfiniStor',
-  Databox = 'Databox'
+  DataBox = 'DataBox'
 }
 
 const ProductSerials = {
   [ProductNames.InfiniPlus]: 'A',
   [ProductNames.InfiniPro]: 'B',
   [ProductNames.InfiniStor]: 'C',
-  [ProductNames.Databox]: 'D'
+  [ProductNames.DataBox]: 'D'
 }
-// Gen - add product field (infiniplus - a, infinipro - b, inifinistar - c, databox- d)
+// Gen - add product field (infiniplus - a, infinipro - b, inifinistar - c, DataBox- d)
 
 export default class Db {
   private db = initDB()

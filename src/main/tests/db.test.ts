@@ -6,7 +6,7 @@ describe('models and serial numbers', () => {
   const db = new Db()
 
   const populateModels = async () => {
-    await db.createModel('a', 'a1', ProductNames.Databox)
+    await db.createModel('a', 'a1', ProductNames.DataBox)
     await db.createModel('b', 'a2', ProductNames.InfiniPlus)
     await db.createModel('c', 'a3', ProductNames.InfiniPro)
   }
@@ -25,12 +25,12 @@ describe('models and serial numbers', () => {
   })
 
   test('create models', async () => {
-    await db.createModel('x', 'x1', ProductNames.Databox)
+    await db.createModel('x', 'x1', ProductNames.DataBox)
     const model = await db.getModelByModelName('x')
     expect(model).toBeDefined()
     expect(model?.name).toBe('x')
     expect(model?.code).toBe('x1')
-    expect(model?.productName).toBe('Databox')
+    expect(model?.productName).toBe('DataBox')
     await db.deleteModelByModelName('x')
   })
 

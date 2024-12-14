@@ -18,7 +18,7 @@ export enum ProductNames {
   InfiniPlus = 'InfiniPlus',
   InfiniPro = 'InfiniPro',
   InfiniStor = 'InfiniStor',
-  Databox = 'Databox'
+  DataBox = 'DataBox'
 }
 
 export default function CreateModel() {
@@ -81,7 +81,7 @@ export default function CreateModel() {
           <option value={ProductNames.InfiniPlus}>{ProductNames.InfiniPlus}</option>
           <option value={ProductNames.InfiniPro}>{ProductNames.InfiniPro}</option>
           <option value={ProductNames.InfiniStor}>{ProductNames.InfiniStor}</option>
-          <option value={ProductNames.Databox}>{ProductNames.Databox}</option>
+          <option value={ProductNames.DataBox}>{ProductNames.DataBox}</option>
         </Select>
       </div>
       <Button

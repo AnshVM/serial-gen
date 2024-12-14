@@ -18,7 +18,7 @@ export enum ProductNames {
   InfiniPlus = 'InfiniPlus',
   InfiniPro = 'InfiniPro',
   InfiniStor = 'InfiniStor',
-  Databox = 'Databox'
+  DataBox = 'DataBox'
 }
 
 export interface API {

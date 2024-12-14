@@ -179,8 +179,8 @@ export default function SerialNumbers() {
             <option key={0} value="any">
               All
             </option>
-            <option key={1} value={ProductNames.Databox}>
-              {ProductNames.Databox}
+            <option key={1} value={ProductNames.DataBox}>
+              {ProductNames.DataBox}
             </option>
             <option key={2} value={ProductNames.InfiniPlus}>
               {ProductNames.InfiniPlus}
