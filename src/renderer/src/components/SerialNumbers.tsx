@@ -1,4 +1,4 @@
-import { ArrowDownIcon, DeleteIcon, ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons'
+import { ArrowDownIcon, DeleteIcon, ChevronUpIcon, ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
@@ -11,7 +11,9 @@ import {
   Td,
   Th,
   Thead,
-  Tr
+  Tr,
+  Tooltip,
+  useToast
 } from '@chakra-ui/react'
 import { Model, SerialNumber } from '@renderer/types'
 import { useEffect, useState } from 'react'
@@ -34,6 +36,7 @@ export default function SerialNumbers() {
   const [endDate, setEndDate] = useState<Date>(new Date())
   const [sortColumn, setSortColumn] = useState<'sr' | 'sequence' | 'date'>('sr')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
+  const toast = useToast()
 
   const toggleSort = (column: 'sr' | 'sequence' | 'date') => {
     if (sortColumn === column) {
@@ -132,6 +135,17 @@ export default function SerialNumbers() {
         setModels(res.reverse())
       })
       .catch((err) => console.log(err))
+  }
+
+  const handleCopy = (serial: string) => {
+    navigator.clipboard.writeText(serial)
+    toast({
+      title: 'Copied to clipboard',
+      status: 'success',
+      duration: 2000,
+      isClosable: true,
+      position: 'top'
+    })
   }
 
   useEffect(() => {
@@ -253,7 +267,20 @@ export default function SerialNumbers() {
               {sortedSerials().map((serial, idx) => (
                 <Tr key={serial.serial}>
                   <Td>{idx}</Td>
-                  <Td>{serial.serial}</Td>
+                  <Td>
+                    <div className="flex items-center gap-2">
+                      {serial.serial}
+                      <Tooltip label="Copy serial number">
+                        <IconButton
+                          aria-label="Copy serial number"
+                          icon={<CopyIcon />}
+                          size="sm"
+                          onClick={() => handleCopy(serial.serial)}
+                          variant="ghost"
+                        />
+                      </Tooltip>
+                    </div>
+                  </Td>
                   <Td>{serial.createdAt.toDateString()}</Td>
                   <Td>{serial.company}</Td>
                   <Td>
