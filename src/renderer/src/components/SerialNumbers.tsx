@@ -199,7 +199,7 @@ export default function SerialNumbers() {
             {models &&
               models.map((model) => (
                 <option key={model.name} value={model.name}>
-                  {model.name}-{model.productName}
+                  {model.name === '' ? 'All' : `${model.name}-${model.productName}`}
                 </option>
               ))}
           </Select>
