@@ -39,10 +39,10 @@ export enum ProductNames {
 }
 
 const ProductSerials = {
-  [ProductNames.InfiniPlus]: 'a',
-  [ProductNames.InfiniPro]: 'b',
-  [ProductNames.InfiniStar]: 'c',
-  [ProductNames.Databox]: 'd'
+  [ProductNames.InfiniPlus]: 'A',
+  [ProductNames.InfiniPro]: 'B',
+  [ProductNames.InfiniStar]: 'C',
+  [ProductNames.Databox]: 'D'
 }
 // Gen - add product field (infiniplus - a, infinipro - b, inifinistar - c, databox- d)
 
