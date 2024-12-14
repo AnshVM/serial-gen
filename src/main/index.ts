@@ -120,7 +120,7 @@ app.whenReady().then(() => {
             height: 12,
             includetext: true,
             textxalign: 'center',
-            textcolor: 'ff0000'
+            textcolor: '000000'
           });
 
           const filePath = path.join(

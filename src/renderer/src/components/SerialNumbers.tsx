@@ -284,7 +284,7 @@ export default function SerialNumbers() {
                   <Td>{serial.createdAt.toDateString()}</Td>
                   <Td>{serial.company}</Td>
                   <Td>
-                    {serial.modelName}-{getModel(serial)?.productName}
+                    {serial.modelName}
                   </Td>
                   <Td>{serial.sequence.toString().padStart(4, '0')}</Td>
                   <Td>
