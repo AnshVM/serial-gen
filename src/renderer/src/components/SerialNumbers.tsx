@@ -13,7 +13,17 @@ import {
   Thead,
   Tr,
   Tooltip,
-  useToast
+  useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  FormControl,
+  FormLabel,
+  useDisclosure
 } from '@chakra-ui/react'
 import { Model, SerialNumber } from '@renderer/types'
 import { useEffect, useState } from 'react'
@@ -37,6 +47,10 @@ export default function SerialNumbers() {
   const [sortColumn, setSortColumn] = useState<'sr' | 'sequence' | 'date'>('sr')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const toast = useToast()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [password, setPassword] = useState('')
+  const [selectedSerial, setSelectedSerial] = useState<string>('')
+  const [passwordError, setPasswordError] = useState(false)
 
   const toggleSort = (column: 'sr' | 'sequence' | 'date') => {
     if (sortColumn === column) {
@@ -99,9 +113,21 @@ export default function SerialNumbers() {
     )
   }
 
-  const handleDelete = async (serial: string) => {
-    await window.api.deleteSerial(serial)
-    refresh()
+  const initiateDelete = (serial: string) => {
+    setSelectedSerial(serial)
+    setPassword('')
+    setPasswordError(false)
+    onOpen()
+  }
+
+  const handleDelete = async () => {
+    if (password === 'Esdee2024@') {
+      await window.api.deleteSerial(selectedSerial)
+      refresh()
+      onClose()
+    } else {
+      setPasswordError(true)
+    }
   }
 
   const generateCsv = () => {
@@ -291,7 +317,7 @@ export default function SerialNumbers() {
                     <DeleteIcon
                       cursor={'pointer'}
                       color={'red'}
-                      onClick={async () => await handleDelete(serial.serial)}
+                      onClick={() => initiateDelete(serial.serial)}
                     />
                   </Td>
                 </Tr>
@@ -310,6 +336,42 @@ export default function SerialNumbers() {
           icon={<ArrowDownIcon />}
         />
       </Box>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Confirm Deletion</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl>
+              <FormLabel>Enter password to delete</FormLabel>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  setPasswordError(false)
+                }}
+                isInvalid={passwordError}
+              />
+              {passwordError && (
+                <Box color="red.500" fontSize="sm" mt={1}>
+                  Incorrect password
+                </Box>
+              )}
+            </FormControl>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="red" mr={3} onClick={handleDelete}>
+              Delete
+            </Button>
+            <Button variant="ghost" onClick={onClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   )
 }
