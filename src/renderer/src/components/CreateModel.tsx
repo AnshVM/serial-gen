@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react'
 export enum ProductNames {
   InfiniPlus = 'InfiniPlus',
   InfiniPro = 'InfiniPro',
-  InfiniStar = 'InfiniStar',
+  InfiniStor = 'InfiniStor',
   Databox = 'Databox'
 }
 
@@ -80,7 +80,7 @@ export default function CreateModel() {
         >
           <option value={ProductNames.InfiniPlus}>{ProductNames.InfiniPlus}</option>
           <option value={ProductNames.InfiniPro}>{ProductNames.InfiniPro}</option>
-          <option value={ProductNames.InfiniStar}>{ProductNames.InfiniStar}</option>
+          <option value={ProductNames.InfiniStor}>{ProductNames.InfiniStor}</option>
           <option value={ProductNames.Databox}>{ProductNames.Databox}</option>
         </Select>
       </div>

@@ -188,8 +188,8 @@ export default function SerialNumbers() {
             <option key={3} value={ProductNames.InfiniPro}>
               {ProductNames.InfiniPro}
             </option>
-            <option key={4} value={ProductNames.InfiniStar}>
-              {ProductNames.InfiniStar}
+            <option key={4} value={ProductNames.InfiniStor}>
+              {ProductNames.InfiniStor}
             </option>
           </Select>
           <Select value={modelName} onChange={(e) => setModelName(e.target.value)}>

@@ -35,7 +35,7 @@ describe('models and serial numbers', () => {
   })
 
   test('serial numbers', async () => {
-    const model: InsertModel = { name: 'a', code: 'a1', productName: ProductNames.InfiniStar}
+    const model: InsertModel = { name: 'a', code: 'a1', productName: ProductNames.InfiniStor}
     await db.createModel(model.name, model.code, model.productName as ProductNames)
 
     await db.createSerialNumber(model.name, 'EBM')
@@ -58,7 +58,7 @@ describe('models and serial numbers', () => {
     const model: InsertModel = { name: 'a', code: 'a1', productName: ProductNames.InfiniPlus }
     await db.createModel(model.name, model.code, model.productName as ProductNames)
 
-    const model2: InsertModel = { name: 'b', code: 'b1', productName: ProductNames.InfiniStar}
+    const model2: InsertModel = { name: 'b', code: 'b1', productName: ProductNames.InfiniStor}
     await db.createModel(model2.name, model2.code, model2.productName as ProductNames)
 
     await db.createSerialNumber(model.name, 'EBM')

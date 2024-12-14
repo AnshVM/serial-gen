@@ -34,14 +34,14 @@ function initDB() {
 export enum ProductNames {
   InfiniPlus = 'InfiniPlus',
   InfiniPro = 'InfiniPro',
-  InfiniStar = 'InfiniStar',
+  InfiniStor = 'InfiniStor',
   Databox = 'Databox'
 }
 
 const ProductSerials = {
   [ProductNames.InfiniPlus]: 'A',
   [ProductNames.InfiniPro]: 'B',
-  [ProductNames.InfiniStar]: 'C',
+  [ProductNames.InfiniStor]: 'C',
   [ProductNames.Databox]: 'D'
 }
 // Gen - add product field (infiniplus - a, infinipro - b, inifinistar - c, databox- d)
@@ -118,6 +118,7 @@ export default class Db {
         createdAt: new Date(),
         sequence
       }
+      console.log(serial)
 
       await this.db.insert(serialNumbers).values(serial)
 

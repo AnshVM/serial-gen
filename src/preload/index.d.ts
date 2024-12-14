@@ -17,7 +17,7 @@ type SerialNumber = {
 export enum ProductNames {
   InfiniPlus = 'InfiniPlus',
   InfiniPro = 'InfiniPro',
-  InfiniStar = 'InfiniStar',
+  InfiniStor = 'InfiniStor',
   Databox = 'Databox'
 }
 
