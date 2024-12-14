@@ -152,6 +152,11 @@ export default function SerialNumbers() {
     refresh()
   }, [])
 
+
+  useEffect(() => {
+    applyFilters()
+  }, [modelName, startDate, endDate])
+
   useEffect(() => {
     console.log(productName)
     if (productName === 'any') return
@@ -168,7 +173,7 @@ export default function SerialNumbers() {
   return (
     <div className="flex flex-col h-screen">
       {/* Fixed Header */}
-      <div className="pl-2 bg-white shadow-md sticky top-0 z-10">
+      <div className="pl-2 bg-white shadow-md sticky top-0 z-10 pb-3">
         <h1 className="text-3xl font-semibold text-center text-teal-700">Serial Numbers</h1>
 
         <div className="flex flex-row justify-center gap-4 mt-4">
@@ -217,9 +222,6 @@ export default function SerialNumbers() {
             type="date"
           />
         </div>
-        <Button className="my-4" colorScheme="teal" onClick={applyFilters}>
-          Apply filters
-        </Button>
       </div>
 
       {/* Scrollable Table */}
