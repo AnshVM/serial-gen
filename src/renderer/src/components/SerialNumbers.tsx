@@ -122,10 +122,8 @@ export default function SerialNumbers() {
   }
 
   const refresh = () => {
-    window.api
-      .filterSerialNumbers({})
-      .then((res) => setSerials(res))
-      .catch((err) => console.log(err))
+
+    applyFilters();
 
     window.api
       .getModels()
