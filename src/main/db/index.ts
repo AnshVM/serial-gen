@@ -6,6 +6,7 @@ import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
 import path from 'path'
 import log from 'electron-log/main'
 import { app } from 'electron'
+import { csvLogger, initLogFile } from './logger'
 
 function initDB() {
   log.info('Connecting to db')
@@ -49,12 +50,15 @@ const ProductSerials = {
 export default class Db {
   private db = initDB()
 
-  constructor() { }
+  constructor() { 
+    initLogFile();
+  }
 
   async createModel(name: string, code: string, productName: ProductNames) {
     try {
       console.log('here')
       await this.db.insert(models).values({ name, code, productName })
+      await csvLogger('CREATE_MODEL', {modelName: name, modelCode: code, productName, serial: ''});
       return true
     } catch (error) {
       console.log(error)
@@ -91,6 +95,7 @@ export default class Db {
   async deleteModelByModelName(name: string) {
     await this.db.delete(serialNumbers).where(eq(serialNumbers.modelName, name))
     await this.db.delete(models).where(eq(models.name, name))
+    await csvLogger('DELETE_MODEL', {modelName: name, modelCode: '', productName: '', serial: ''});
   }
 
   async createSerialNumber(modelName: string, company: string, date?: number) {
@@ -122,6 +127,13 @@ export default class Db {
 
       await this.db.insert(serialNumbers).values(serial)
 
+      await csvLogger('GENERATE_SERIAL', {
+        modelName, 
+        serial: serialString,
+        modelCode: '',
+        productName: ''
+      })
+
       return serialString
     } catch (error) {
       console.log(error)
@@ -131,6 +143,12 @@ export default class Db {
 
   async deleteSerial(serial: string) {
     await this.db.delete(serialNumbers).where(eq(serialNumbers.serial, serial));
+    await csvLogger('DELETE_SERIAL', {
+      serial,
+      modelCode: '',
+      modelName: '',
+      productName: ''
+    })
   }
 
   async getSerialNumbersByModelName(model: string): Promise<SerialNumber[]> {
