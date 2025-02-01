@@ -1,7 +1,6 @@
 import { ArrowDownIcon, DeleteIcon, ChevronUpIcon, ChevronDownIcon, CopyIcon } from '@chakra-ui/icons'
 import {
   Box,
-  Button,
   IconButton,
   Input,
   Select,
@@ -14,20 +13,11 @@ import {
   Tr,
   Tooltip,
   useToast,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  FormControl,
-  FormLabel,
-  useDisclosure
 } from '@chakra-ui/react'
 import { Model, SerialNumber } from '@renderer/types'
 import { useEffect, useState } from 'react'
 import { ProductNames } from './CreateModel'
+import PasswordModal from './PasswordModal'
 
 const dateToString = (date: Date) => {
   const offset = date.getTimezoneOffset()
@@ -47,10 +37,10 @@ export default function SerialNumbers() {
   const [sortColumn, setSortColumn] = useState<'sr' | 'sequence' | 'date'>('sr')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc')
   const toast = useToast()
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const [password, setPassword] = useState('')
   const [selectedSerial, setSelectedSerial] = useState<string>('')
   const [passwordError, setPasswordError] = useState(false)
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
 
   const toggleSort = (column: 'sr' | 'sequence' | 'date') => {
     if (sortColumn === column) {
@@ -117,14 +107,14 @@ export default function SerialNumbers() {
     setSelectedSerial(serial)
     setPassword('')
     setPasswordError(false)
-    onOpen()
+    setIsPasswordModalOpen(true)
   }
 
   const handleDelete = async () => {
     if (password === 'Esdee2024@') {
       await window.api.deleteSerial(selectedSerial)
       refresh()
-      onClose()
+      setIsPasswordModalOpen(false)
     } else {
       setPasswordError(true)
     }
@@ -337,41 +327,15 @@ export default function SerialNumbers() {
         />
       </Box>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Confirm Deletion</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <FormControl>
-              <FormLabel>Enter password to delete</FormLabel>
-              <Input
-                type="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value)
-                  setPasswordError(false)
-                }}
-                isInvalid={passwordError}
-              />
-              {passwordError && (
-                <Box color="red.500" fontSize="sm" mt={1}>
-                  Incorrect password
-                </Box>
-              )}
-            </FormControl>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={handleDelete}>
-              Delete
-            </Button>
-            <Button variant="ghost" onClick={onClose}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <PasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+        password={password}
+        setPassword={setPassword}
+        passwordError={passwordError}
+        setPasswordError={setPasswordError}
+        handleDelete={handleDelete}
+      />
     </div>
   )
 }

@@ -1,3 +1,4 @@
+import { DeleteIcon } from '@chakra-ui/icons'
 import {
   Button,
   Input,
@@ -13,6 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { Model } from '@renderer/types'
 import { useEffect, useState } from 'react'
+import PasswordModal from './PasswordModal'
 
 export enum ProductNames {
   InfiniPlus = 'InfiniPlus',
@@ -29,6 +31,10 @@ export default function CreateModel() {
   const [models, setModels] = useState<Model[]>([])
   const [productName, setProductName] = useState(ProductNames.InfiniPlus)
   const toast = useToast()
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
+  const [selectedModel, setSelectedModel] = useState<Model | null>(null)
+  const [password, setPassword] = useState('')
+  const [passwordError, setPasswordError] = useState(false)
 
   const handleSaveModel = async () => {
     console.log(name, code, productName)
@@ -64,6 +70,23 @@ export default function CreateModel() {
     }
   }
 
+  const initiateDelete = (model: Model) => {
+    setSelectedModel(model)
+    setPassword('')
+    setPasswordError(false)
+    setIsPasswordModalOpen(true)
+  }
+
+  const handleDelete = async () => {
+    if (password === 'Esdee2024@' && selectedModel) {
+      await window.api.deleteModelByModelName(selectedModel.name)
+      refreshModels()
+      setIsPasswordModalOpen(false)
+    } else {
+      setPasswordError(true)
+    }
+  }
+
   useEffect(() => {
     refreshModels()
   })
@@ -93,6 +116,16 @@ export default function CreateModel() {
         Create Model
       </Button>
 
+      <PasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+        password={password}
+        setPassword={setPassword}
+        passwordError={passwordError}
+        setPasswordError={setPasswordError}
+        handleDelete={handleDelete}
+      />
+
       <TableContainer>
         <Table variant={'simple'}>
           <Thead>
@@ -100,6 +133,7 @@ export default function CreateModel() {
               <Th>Name</Th>
               <Th>Product name</Th>
               <Th>Code</Th>
+              <Th></Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -109,6 +143,13 @@ export default function CreateModel() {
                   <Td>{model.name}</Td>
                   <Td>{model.productName}</Td>
                   <Td>{model.code}</Td>
+                  <Td>
+                    <DeleteIcon
+                      cursor={'pointer'}
+                      color={'red'}
+                      onClick={() => initiateDelete(model)}
+                    />
+                  </Td>
                 </Tr>
               ))}
           </Tbody>

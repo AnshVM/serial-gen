@@ -93,6 +93,7 @@ export default class Db {
   }
 
   async deleteModelByModelName(name: string) {
+    console.log(`Deleting model name: ${name}`);
     await this.db.delete(serialNumbers).where(eq(serialNumbers.modelName, name))
     await this.db.delete(models).where(eq(models.name, name))
     await csvLogger('DELETE_MODEL', {modelName: name, modelCode: '', productName: '', serial: ''});

@@ -28,6 +28,7 @@ export interface API {
   getModelByModelName: (name: string) => Promise<Model>
   createSerialNumber: (modelName: string, company: string, date?: number) => Promise<string | null>
   deleteSerial: (serial: string) => Promise<void>,
+  deleteModelByModelName: (modelName) => Promise<void>,
   filterSerialNumbers: (filters: {
     modelName?: string
     startDate?: Date

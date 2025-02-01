@@ -28,6 +28,9 @@ const api = {
   },
   deleteSerial: (serial: string) => {
     return ipcRenderer.invoke('delete-serial', serial);
+  },
+  deleteModelByModelName: (name: string) => {
+    return ipcRenderer.invoke('delete-model-by-model-name', name);
   }
 }
 
